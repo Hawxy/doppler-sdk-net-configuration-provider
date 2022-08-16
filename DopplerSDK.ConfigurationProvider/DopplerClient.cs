@@ -42,7 +42,7 @@ public class DopplerClientResponse
     }
 }
 
-public class DopplerClient
+public class DopplerClient : IDisposable
 {
     private readonly HttpClient _httpClient;
     public string ApiHost = "https://api.doppler.com";
@@ -73,6 +73,7 @@ public class DopplerClient
 
     public async Task<DopplerClientResponse> FetchSecretsAsync()
     {
+
         if (IsNullOrEmpty(DopplerClientConfiguration.DopplerToken))
             return new DopplerClientResponse(null,
                 "Doppler Client Error: DopplerClientConfiguration.DopplerToken not set");
@@ -104,5 +105,10 @@ public class DopplerClient
             return new DopplerClientResponse(null,
                 $"Doppler Client HttpRequestException: {httpRequestException.Message}");
         }
+    }
+
+    public void Dispose()
+    {
+        _httpClient.Dispose();
     }
 }
